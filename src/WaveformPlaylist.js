@@ -4,7 +4,6 @@ import * as ExternalWaveformPlaylist from 'waveform-playlist'
 
 export default class WaveformPlaylist extends Component {
     componentDidMount() {
-        setTimeout(() => {
             ExternalWaveformPlaylist.init(
                 {
                     samplesPerPixel: 3000,
@@ -127,13 +126,25 @@ export default class WaveformPlaylist extends Component {
                 // console.log("YOYO")
                 ee.emit("stop")
             })
-        }, 500)
     }
     render() {
         return (<div>
+
             <h1>Your song</h1>
-            <div className="btn-play">Play</div>
-            <div className="btn-stop">Stop</div>
+
+            <div id="top-bar" className="playlist-top-bar">
+                <div className="playlist-toolbar">
+                    <div className="btn-group">
+                        <span className="btn-pause btn btn-warning"><i className="fa fa-pause"></i></span>
+                        <span className="btn-play btn btn-success"><i className="fa fa-play"></i></span>
+                        <span className="btn-stop btn btn-danger"><i className="fa fa-stop"></i></span>
+                        <span className="btn-rewind btn btn-success"><i className="fa fa-fast-backward"></i></span>
+                        <span className="btn-fast-forward btn btn-success"><i className="fa fa-fast-forward"></i></span>
+                    </div>
+                    <span className="audio-pos"></span>
+                </div>
+            </div>
+
             <div id="playlist"></div>
         </div>)
     }
