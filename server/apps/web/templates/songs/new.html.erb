@@ -1,0 +1,11 @@
+<%=
+  form_for :song, 'songs' do
+    label :title
+    text_field :title
+
+    label :stems
+    file_field :stems, multiple: true
+
+    submit 'Create'
+  end
+%>

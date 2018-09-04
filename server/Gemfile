@@ -19,8 +19,10 @@ group :test, :development do
 end
 
 group :test do
+  gem 'selenium-webdriver'
   gem 'rspec'
   gem 'capybara'
+  gem 'puma'
 end
 
 group :production do
