@@ -1,17 +1,17 @@
 source 'https://rubygems.org'
 ruby '2.4.1'
 
-gem 'rake'
 gem 'hanami',       '~> 1.2'
 gem 'hanami-model', '~> 1.2'
-
 gem 'pg'
+gem 'rake'
 
 group :development do
   # Code reloading
   # See: http://hanamirb.org/guides/projects/code-reloading
-  gem 'shotgun', platforms: :ruby
   gem 'hanami-webconsole'
+  gem 'pry'
+  gem 'shotgun', platforms: :ruby
 end
 
 group :test, :development do
@@ -19,8 +19,10 @@ group :test, :development do
 end
 
 group :test do
-  gem 'rspec'
   gem 'capybara'
+  gem 'puma'
+  gem 'rspec'
+  gem 'selenium-webdriver'
 end
 
 group :production do
