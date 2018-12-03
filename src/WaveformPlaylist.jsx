@@ -1,23 +1,16 @@
 import React, {Component} from 'react'
 import $ from "jquery"
 import * as ExternalWaveformPlaylist from 'waveform-playlist'
-import firebase from 'firebase'
-
-firebase.initializeApp({
-  apiKey: process.env.REACT_APP_API_KEY,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  authDomain: `${process.env.REACT_APP_PROJECT_ID}.firebaseapp.com`,
-  databaseURL: process.env.REACT_APP_DATABASE_URL,
-  storageBucket: process.env.REACT_APP_BUCKET,
-});
-
+import {SongGateway} from "./gateways/song-gateway";
 
 export default class WaveformPlaylist extends Component {
   constructor(props) {
     super(props);
     this.state = {
       songId: props.match.params.id
-    }
+    };
+
+    this.songGateway = new SongGateway();
   }
 
   async componentDidMount() {
@@ -25,29 +18,31 @@ export default class WaveformPlaylist extends Component {
       loading: true
     });
 
-    const firestore = firebase.firestore();
-    const settings = { timestampsInSnapshots: true};
-    firestore.settings(settings);
+    const song = this.songGateway.findBySlug(this.songId);
 
-    const storage = firebase.storage();
-    const db = firebase.firestore();
+    renderWaveformPlaylist(song.stems);
 
-    const songQuery = await db.collection('songs').where('slug', '==', this.state.songId).get();
-    const song = songQuery.docs[0];
-
-    const myStemNames = song.data().stems.map(stem => stem.fileName);
-
-    const storageRef = storage.ref(`songs/${song.id}/`);
-    const getDownloadUrlPromises = myStemNames
-      .map(stemName => storageRef.child(stemName).getDownloadURL());
-
-    Promise.all(getDownloadUrlPromises).then(resolvedUrls => {
-      const stemMapping = myStemNames.map((stemName, i) => {
-        return {name: stemName, src: resolvedUrls[i]}
-      });
-
-      renderWaveformPlaylist(stemMapping)
-    });
+    // const db = firebase.firestore();
+    // const settings = { timestampsInSnapshots: true};
+    // db.settings(settings);
+    //
+    // const songQuery = await db.collection('songs').where('slug', '==', this.state.songId).get();
+    // const song = songQuery.docs[0];
+    //
+    // const myStemNames = song.data().stems.map(stem => stem.fileName);
+    //
+    // const storage = firebase.storage();
+    // const storageRef = storage.ref(`songs/${song.id}/`);
+    // const getDownloadUrlPromises = myStemNames
+    //   .map(stemName => storageRef.child(stemName).getDownloadURL());
+    //
+    // Promise.all(getDownloadUrlPromises).then(resolvedUrls => {
+    //   const stemMapping = myStemNames.map((stemName, i) => {
+    //     return {name: stemName, src: resolvedUrls[i]}
+    //   });
+    //
+    //   renderWaveformPlaylist(stemMapping)
+    // });
 
     this.setState({
       loading: false
